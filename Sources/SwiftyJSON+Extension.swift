@@ -19,38 +19,17 @@ extension JSON {
     //Optional Date
     public var date: Date? {
         get {
-            switch self.type {
-            case .string:
-                return self.object as? String
-            default:
-                return nil
+            if let timeInterval = self["$date"].int64 {
+                return Date(timeIntervalSince1970: Double(timeInterval) / 1000)
             }
+            return nil
         }
         set {
             if let newValue = newValue {
-                self.object = NSString(string:newValue)
+                self.object = newValue.bsonString
             } else {
                 self.object = NSNull()
             }
-        }
-    }
-    
-    //Non-optional string
-    public var dateValue: Date {
-        get {
-            switch self.type {
-            case .string:
-                return self.object as? String ?? ""
-            case .number:
-                return self.object.stringValue
-            case .bool:
-                return (self.object as? Bool).map { String($0) } ?? ""
-            default:
-                return ""
-            }
-        }
-        set {
-            self.object = NSString(string:newValue)
         }
     }
 }
@@ -71,29 +50,10 @@ extension JSON {
         }
         set {
             if let newValue = newValue {
-                self.object = NSString(string:newValue)
+                self.object = newValue.bsonString
             } else {
                 self.object = NSNull()
             }
-        }
-    }
-    
-    //Non-optional ObjectId
-    public var oidValue: ObjectId {
-        get {
-            switch self.type {
-            case .string:
-                return self.object as? String ?? ""
-            case .number:
-                return self.object.stringValue
-            case .bool:
-                return (self.object as? Bool).map { String($0) } ?? ""
-            default:
-                return ""
-            }
-        }
-        set {
-            self.object = NSString(string:newValue)
         }
     }
 }
