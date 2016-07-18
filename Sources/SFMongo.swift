@@ -1,8 +1,3 @@
-struct SFMongo {
-
-    var text = "Hello, World!"
-}
-
 public protocol JSONLiteralConvertible {
     init(json: JSON)
 }
@@ -11,11 +6,10 @@ public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-class A {
-    private(set) var a: Int = 0
+public protocol JSONConvertible {
+    var json: JSON {get}
 }
 
-
-func aa() {
-    A().a = 1
+public protocol SFModel: JSONLiteralConvertible, BSONStringConvertible, JSONConvertible {
+    
 }
