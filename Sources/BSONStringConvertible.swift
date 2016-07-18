@@ -6,25 +6,23 @@
 //
 //
 
-import Foundation
-
 public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-extension Dictionary where Value: BSONStringConvertible {
-    public var bsonString: String {
+extension Dictionary {
+    public var jsonString: String {
         get {
             var parts: [String] = []
             for (key, value) in self {
-                parts.append("\"\(key)\": \(value.bsonString)")
+                parts.append("\"\(key)\": \(value)")
             }
             return "{" + parts.joined(separator: ",") + "}"
         }
     }
 }
 
-extension Array where Element: BSONStringConvertible {
+extension Array where Element : BSONStringConvertible {
     public var bsonString: String {
         return "[" + self.map{return $0.bsonString}.joined(separator: ",") + "]"
     }
