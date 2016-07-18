@@ -1,5 +1,5 @@
 public protocol JSONLiteralConvertible {
-    init(json: JSON)
+    init(json: JSON) throws
 }
 
 public protocol JSONConvertible {

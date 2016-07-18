@@ -11,7 +11,7 @@ import libmongoc
 
 public struct ObjectId: BSONStringConvertible {
     
-    var oid: String
+    public var oid: String
     
     init?(oid: String) {
         if oid.characters.count == 24 {
