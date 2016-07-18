@@ -8,8 +8,12 @@
 
 import Foundation
 
-extension JSON {
-    
+extension JSON: BSONStringConvertible {
+    public var bsonString: String {
+        get {
+            return self.description
+        }
+    }
 }
 
 // MARK: - ObjectId
