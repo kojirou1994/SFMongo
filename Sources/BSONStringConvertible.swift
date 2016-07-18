@@ -13,7 +13,7 @@ public protocol BSONStringConvertible {
 }
 
 extension Dictionary where Key: CustomStringConvertible, Value: BSONStringConvertible {
-    var bsonString: String {
+    public var bsonString: String {
         get {
             var parts: [String] = []
             for (key, value) in self {
@@ -25,7 +25,7 @@ extension Dictionary where Key: CustomStringConvertible, Value: BSONStringConver
 }
 
 extension Array where Element: BSONStringConvertible {
-    var bsonString: String {
+    public var bsonString: String {
         return "[" + self.map{return $0.bsonString}.joined(separator: ",") + "]"
     }
 }
