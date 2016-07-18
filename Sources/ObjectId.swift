@@ -13,6 +13,14 @@ public struct ObjectId: BSONStringConvertible {
     
     public var oid: String
     
+    public static func generate() -> ObjectId {
+        var oid = bson_oid_t()
+        bson_oid_init(&oid, nil)
+        var str = [Int8].init(repeating: 0, count: 24)
+        bson_oid_to_string(&oid, &str)
+        return ObjectId(oid: String(utf8String: str)!)!
+    }
+    
     init?(oid: String) {
         if oid.characters.count == 24 {
             self.oid = oid
