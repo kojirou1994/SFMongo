@@ -12,7 +12,7 @@ public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-extension Dictionary where Key: CustomStringConvertible, Value: BSONStringConvertible {
+extension Dictionary where Value: BSONStringConvertible {
     public var bsonString: String {
         get {
             var parts: [String] = []
