@@ -45,7 +45,6 @@ extension SFModel {
         let m = Mirror(reflecting: self)
         var bsonDic = Dictionary<String, Any>()
         for (label, value) in m.children {
-            print(label)
             if label != nil && value is JSONStringConvertible {
                 bsonDic[label!] = value
             }

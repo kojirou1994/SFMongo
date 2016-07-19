@@ -16,7 +16,6 @@ extension Dictionary: JSONStringConvertible {
     public var jsonString: String {
         var parts: [String] = []
         for (key, value) in self {
-            print(key)
             if value is JSONStringConvertible {
                 parts.append("\"\(key)\": \((value as! JSONStringConvertible).jsonString)")
             }
