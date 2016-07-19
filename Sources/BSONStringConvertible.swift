@@ -11,20 +11,6 @@ public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-public extension BSONStringConvertible {
-    
-    public var bsonString: String {
-        let m = Mirror(reflecting: self)
-        var bsonDic = Dictionary<String, Any>()
-        for (label, value) in m.children {
-            if label != nil && value is BSONStringConvertible{
-                bsonDic[label!] = value
-            }
-        }
-        return bsonDic.bsonString
-    }
-}
-
 extension Dictionary: BSONStringConvertible {
     public var bsonString: String {
         var parts: [String] = []
