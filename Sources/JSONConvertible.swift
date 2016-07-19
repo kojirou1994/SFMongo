@@ -13,7 +13,7 @@ public protocol JSONConvertible {
     var jsonString: String {get}
 }
 
-extension JSONConvertible {
+public extension JSONConvertible {
     public var json: JSON {
         let m = Mirror(reflecting: self)
         var bsonDic = Dictionary<String, String>()

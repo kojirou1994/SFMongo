@@ -11,7 +11,7 @@ public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-extension BSONStringConvertible {
+public extension BSONStringConvertible {
     
     public var bsonString: String {
         let m = Mirror(reflecting: self)
