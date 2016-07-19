@@ -9,7 +9,7 @@
 import Foundation
 import libmongoc
 
-public struct ObjectId: JSONStringConvertible, BSONStringConvertible, CustomStringConvertible {
+public struct ObjectId: JSONStringConvertible, BSONStringConvertible {
     
     private(set) var oid: String
     
@@ -38,23 +38,19 @@ public struct ObjectId: JSONStringConvertible, BSONStringConvertible, CustomStri
         self.oid = oidStr
     }
     
-    public var bsonString: String {
-        get {
-            return "{\"$oid\": \(oid)}"
-        }
-    }
-    
     public var timeIntervalSince1970: Int {
         var oid = bson_oid_t()
         bson_oid_init_from_string(&oid, self.oid)
         return bson_oid_get_time_t(&oid)
     }
     
-    public var description: String {
-        return oid
+    public var bsonString: String {
+        get {
+            return "{\"$oid\": \"\(oid)}\""
+        }
     }
     
     public var jsonString: String {
-        return oid
+        return "\"\(oid)\""
     }
 }

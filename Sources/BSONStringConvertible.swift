@@ -15,13 +15,28 @@ extension BSONStringConvertible {
     
     public var bsonString: String {
         let m = Mirror(reflecting: self)
-        var bsonDic = Dictionary<String, String>()
+        var bsonDic = Dictionary<String, Any>()
         for (label, value) in m.children {
             if label != nil && value is BSONStringConvertible{
-                bsonDic[label!] = (value as! BSONStringConvertible).bsonString
+                bsonDic[label!] = value
             }
         }
-        return bsonDic.jsonString
+        return bsonDic.bsonString
+    }
+}
+
+extension Dictionary: BSONStringConvertible {
+    public var bsonString: String {
+        var parts: [String] = []
+        for (key, value) in self {
+            if value is BSONStringConvertible {
+                parts.append("\"\(key)\": \((value as! BSONStringConvertible).bsonString)")
+            }
+            else {
+                parts.append("\"\(key)\": \(value)")
+            }
+        }
+        return "{" + parts.joined(separator: ",") + "}"
     }
 }
 
@@ -42,7 +57,7 @@ extension Array where Element : BSONStringConvertible {
 
 extension String: BSONStringConvertible {
     public var bsonString: String {
-        return self
+        return "\"\(self)\""
     }
 }
 

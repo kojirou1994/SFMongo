@@ -35,25 +35,25 @@ extension Array where Element : JSONStringConvertible {
 
 extension String: JSONStringConvertible {
     public var jsonString: String {
-        return self
+        return "\"\(self)\""
     }
 }
 
 extension Int: JSONStringConvertible {
     public var jsonString: String {
-        return self.description
+        return String(self)
     }
 }
 
 extension Double: JSONStringConvertible {
     public var jsonString: String {
-        return self.description
+        return String(self)
     }
 }
 
 extension Bool: JSONStringConvertible {
     public var jsonString: String {
-        return self.description
+        return self ? "true" : "false"
     }
 }
 

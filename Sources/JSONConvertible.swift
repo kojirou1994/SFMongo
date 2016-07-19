@@ -10,6 +10,7 @@ import Foundation
 
 public protocol JSONConvertible {
     var json: JSON {get}
+    var jsonString: String {get}
 }
 
 extension JSONConvertible {
@@ -22,5 +23,16 @@ extension JSONConvertible {
             }
         }
         return JSON(bsonDic)
+    }
+    
+    public var jsonString: String {
+        let m = Mirror(reflecting: self)
+        var bsonDic = Dictionary<String, Any>()
+        for (label, value) in m.children {
+            if label != nil && value is JSONStringConvertible {
+                bsonDic[label!] = value
+            }
+        }
+        return bsonDic.jsonString
     }
 }
