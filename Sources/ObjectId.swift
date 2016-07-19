@@ -22,15 +22,20 @@ public struct ObjectId: BSONStringConvertible {
     }
     
     init?(oid: String) {
+        let oidStr: String
         if oid.characters.count == 24 {
-            self.oid = oid
+            oidStr = oid
         }
         else if oid.characters.count == 36 && oid.hasPrefix("ObjectId(\"") && oid.hasSuffix("\")") {
-            self.oid = oid[10...33]!
+            oidStr = oid[10...33]!
         }
         else {
             return nil
         }
+        if !bson_oid_is_valid(oidStr, oidStr.utf8.count) {
+            return nil
+        }
+        self.oid = oidStr
     }
     
     public var bsonString: String {
