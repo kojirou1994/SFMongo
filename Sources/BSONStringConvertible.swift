@@ -35,9 +35,14 @@ extension Date: BSONStringConvertible {
     }
 }
 
-extension Array where Element : BSONStringConvertible {
+extension Array: BSONStringConvertible {
     public var bsonString: String {
-        return "[" + self.map{return $0.bsonString}.joined(separator: ",") + "]"
+        return "[" + self.map{
+            if $0 is BSONStringConvertible {
+                return ($0 as! BSONStringConvertible).bsonString
+            }else {
+                return String($0)
+            }}.joined(separator: ",") + "]"
     }
 }
 

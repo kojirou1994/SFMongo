@@ -10,5 +10,4 @@ import Foundation
 
 public protocol JSONConvertible {
     var json: JSON {get}
-    var jsonString: String {get}
 }

@@ -16,7 +16,7 @@ public protocol JSONLiteralConvertible {
     init(json: JSON) throws
 }
 
-public protocol SFModel: JSONLiteralConvertible, JSONConvertible, BSONStringConvertible { }
+public protocol SFModel: JSONLiteralConvertible, JSONConvertible, BSONStringConvertible, JSONStringConvertible { }
 
 extension SFModel {
     public var bsonString: String {
@@ -45,6 +45,7 @@ extension SFModel {
         let m = Mirror(reflecting: self)
         var bsonDic = Dictionary<String, Any>()
         for (label, value) in m.children {
+            print(label)
             if label != nil && value is JSONStringConvertible {
                 bsonDic[label!] = value
             }

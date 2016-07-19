@@ -16,6 +16,7 @@ extension Dictionary: JSONStringConvertible {
     public var jsonString: String {
         var parts: [String] = []
         for (key, value) in self {
+            print(key)
             if value is JSONStringConvertible {
                 parts.append("\"\(key)\": \((value as! JSONStringConvertible).jsonString)")
             }
@@ -27,9 +28,14 @@ extension Dictionary: JSONStringConvertible {
     }
 }
 
-extension Array where Element : JSONStringConvertible {
+extension Array: JSONStringConvertible {
     public var jsonString: String {
-        return "[" + self.map{return $0.jsonString}.joined(separator: ",") + "]"
+        return "[" + self.map{
+            if $0 is JSONStringConvertible {
+                return ($0 as! JSONStringConvertible).jsonString
+            }else {
+                return String($0)
+            }}.joined(separator: ",") + "]"
     }
 }
 
