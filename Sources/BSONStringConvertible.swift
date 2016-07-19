@@ -5,19 +5,31 @@
 //  Created by Kojirou on 16/7/18.
 //
 //
+import Foundation
 
 public protocol BSONStringConvertible {
     var bsonString: String {get}
 }
 
-extension Dictionary {
-    public var jsonString: String {
-        get {
-            var parts: [String] = []
-            for (key, value) in self {
-                parts.append("\"\(key)\": \(value)")
+extension BSONStringConvertible {
+    
+    public var bsonString: String {
+        let m = Mirror(reflecting: self)
+        var bsonDic = Dictionary<String, String>()
+        for (label, value) in m.children {
+            if label != nil && value is BSONStringConvertible{
+                bsonDic[label!] = (value as! BSONStringConvertible).bsonString
             }
-            return "{" + parts.joined(separator: ",") + "}"
+        }
+        return bsonDic.jsonString
+    }
+}
+
+extension Date: BSONStringConvertible {
+    
+    public var bsonString: String {
+        get {
+            return "{\"$date\" : \(Int(self.timeIntervalSince1970 * 1000))}"
         }
     }
 }

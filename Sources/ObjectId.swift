@@ -9,9 +9,9 @@
 import Foundation
 import libmongoc
 
-public struct ObjectId: BSONStringConvertible {
+public struct ObjectId: JSONStringConvertible, BSONStringConvertible, CustomStringConvertible {
     
-    public var oid: String
+    private(set) var oid: String
     
     public static func generate() -> ObjectId {
         var oid = bson_oid_t()
@@ -50,4 +50,11 @@ public struct ObjectId: BSONStringConvertible {
         return bson_oid_get_time_t(&oid)
     }
     
+    public var description: String {
+        return oid
+    }
+    
+    public var jsonString: String {
+        return oid
+    }
 }
