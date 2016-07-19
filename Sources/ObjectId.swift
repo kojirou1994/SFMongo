@@ -11,7 +11,7 @@ import libmongoc
 
 public struct ObjectId: JSONStringConvertible, BSONStringConvertible {
     
-    private(set) var oid: String
+    private(set) var id: String
     
     public static func generate() -> ObjectId {
         var oid = bson_oid_t()
@@ -35,22 +35,20 @@ public struct ObjectId: JSONStringConvertible, BSONStringConvertible {
         if !bson_oid_is_valid(oidStr, oidStr.utf8.count) {
             return nil
         }
-        self.oid = oidStr
+        self.id = oidStr
     }
     
     public var timeIntervalSince1970: Int {
         var oid = bson_oid_t()
-        bson_oid_init_from_string(&oid, self.oid)
+        bson_oid_init_from_string(&oid, self.id)
         return bson_oid_get_time_t(&oid)
     }
     
     public var bsonString: String {
-        get {
-            return "{\"$oid\": \"\(oid)}\""
-        }
+        return "{\"$oid\": \"\(id)}\""
     }
     
     public var jsonString: String {
-        return "\"\(oid)\""
+        return "\"\(id)\""
     }
 }
