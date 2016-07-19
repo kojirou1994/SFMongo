@@ -39,4 +39,10 @@ public struct ObjectId: BSONStringConvertible {
         }
     }
     
+    public var timeIntervalSince1970: Int {
+        var oid = bson_oid_t()
+        bson_oid_init_from_string(&oid, self.oid)
+        return bson_oid_get_time_t(&oid)
+    }
+    
 }
