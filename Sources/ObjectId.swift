@@ -9,7 +9,7 @@
 import Foundation
 import libmongoc
 
-public struct ObjectId: JSONStringConvertible, BSONStringConvertible {
+public struct ObjectId: JSONStringConvertible, BSONStringConvertible, Equatable {
     
     private(set) var id: String
     
@@ -51,4 +51,8 @@ public struct ObjectId: JSONStringConvertible, BSONStringConvertible {
     public var jsonString: String {
         return "\"\(id)\""
     }
+}
+
+public func ==(lhs: ObjectId, rhs: ObjectId) -> Bool {
+    return lhs.id == rhs.id
 }
