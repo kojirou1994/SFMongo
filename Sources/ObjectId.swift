@@ -45,7 +45,7 @@ public struct ObjectId: JSONStringConvertible, BSONStringConvertible, Equatable 
     }
     
     public var bsonString: String {
-        return "{\"$oid\": \"\(id)}\""
+        return "{\"$oid\": \"\(id)\"}"
     }
     
     public var jsonString: String {
