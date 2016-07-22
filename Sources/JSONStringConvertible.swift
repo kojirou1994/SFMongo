@@ -64,6 +64,6 @@ extension Bool: JSONStringConvertible {
 
 extension Date: JSONStringConvertible {
     public var jsonString: String {
-        return self.description
+        return "\"\(self.description)\""
     }
 }
