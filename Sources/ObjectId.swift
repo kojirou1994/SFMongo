@@ -21,7 +21,13 @@ public struct ObjectId: JSONStringConvertible, BSONStringConvertible, Equatable 
         return ObjectId(oid: String(utf8String: str)!)!
     }
     
-    init?(oid: String) {
+    public static func parse(oid: String) -> bson_oid_t {
+        var o = bson_oid_t()
+        bson_oid_init_from_string(&o, oid)
+        return o
+    }
+    
+    public init?(oid: String) {
         let oidStr: String
         if oid.characters.count == 24 {
             oidStr = oid
