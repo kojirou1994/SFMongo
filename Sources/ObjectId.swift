@@ -11,7 +11,7 @@ import libmongoc
 
 public struct ObjectId: JSONStringConvertible, BSONStringConvertible, Equatable {
     
-    private(set) var id: String
+    public private(set) var id: String
     
     public static func generate() -> ObjectId {
         var oid = bson_oid_t()
