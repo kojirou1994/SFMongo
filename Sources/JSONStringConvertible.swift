@@ -19,9 +19,6 @@ extension Dictionary: JSONStringConvertible {
             if value is JSONStringConvertible {
                 parts.append("\"\(key)\": \((value as! JSONStringConvertible).jsonString)")
             }
-            else {
-                parts.append("\"\(key)\": \(value)")
-            }
         }
         return "{" + parts.joined(separator: ",") + "}"
     }
