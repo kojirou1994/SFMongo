@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SFMongoError: ErrorProtocol {
+public enum SFMongoError: Error {
     case invalidData
 }
 
