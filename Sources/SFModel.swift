@@ -23,8 +23,11 @@ extension SFModel {
         let m = Mirror(reflecting: self)
         var bsonDic = Dictionary<String, Any>()
         for (label, value) in m.children {
-            if label != nil && value is BSONStringConvertible{
-                bsonDic[label!] = value
+            if label == nil {
+                break
+            }
+            if let v = cast(value: value, type: Optional<BSONStringConvertible>.self) {
+                bsonDic[label!] = v
             }
         }
         return bsonDic.bsonString
@@ -43,12 +46,19 @@ extension SFModel {
     
     public var jsonString: String {
         let m = Mirror(reflecting: self)
-        var bsonDic = Dictionary<String, Any>()
+        var jsonDic = Dictionary<String, Any>()
         for (label, value) in m.children {
-            if label != nil && value is JSONStringConvertible {
-                bsonDic[label!] = value
+            if label == nil {
+                break
+            }
+            if let v = cast(value: value, type: Optional<JSONStringConvertible>.self) {
+                jsonDic[label!] = v
             }
         }
-        return bsonDic.jsonString
+        return jsonDic.jsonString
+    }
+    
+    private func cast<A>(value: Any, type: A.Type) -> A? {
+        return value as? A
     }
 }
