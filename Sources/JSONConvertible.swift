@@ -6,8 +6,8 @@
 //
 //
 
-import Foundation
+import SFJSON
 
 public protocol JSONConvertible {
-    var json: JSON {get}
+    var json: SFJSON {get}
 }
