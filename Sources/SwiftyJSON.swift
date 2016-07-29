@@ -67,7 +67,7 @@ public struct JSON {
     */
     public init(data:Data, options opt: JSONSerialization.ReadingOptions = .allowFragments, error: NSErrorPointer? = nil) {
         do {
-            let object: AnyObject = try JSONSerialization.jsonObject(with: data, options: opt)
+            let object = try JSONSerialization.jsonObject(with: data, options: opt)
             self.init(object)
         } catch let aError as NSError {
             if error != nil {
@@ -95,7 +95,7 @@ public struct JSON {
 
     - returns: The created JSON
     */
-    public init(_ object: AnyObject) {
+    public init(_ object: Any) {
         self.object = object
     }
 
@@ -118,7 +118,7 @@ public struct JSON {
     - returns: The created JSON
     */
     public init(_ jsonDictionary:[String: JSON]) {
-        var dictionary = [String: AnyObject](minimumCapacity: jsonDictionary.count)
+        var dictionary = [String: Any](minimumCapacity: jsonDictionary.count)
         for (key, json) in jsonDictionary {
             dictionary[key] = json.object
         }
@@ -126,8 +126,8 @@ public struct JSON {
     }
 
     /// Private object
-    private var rawArray: [AnyObject] = []
-    private var rawDictionary: [String : AnyObject] = [:]
+    private var rawArray: [Any] = []
+    private var rawDictionary: [String : Any] = [:]
     private var rawString: String = ""
     private var rawNumber: NSNumber = 0
     private var rawNull: NSNull = NSNull()
@@ -137,7 +137,7 @@ public struct JSON {
     private var _error: NSError? = nil
 
     /// Object in JSON
-    public var object: AnyObject {
+    public var object: Any {
         get {
             switch self.type {
             case .array:
@@ -171,17 +171,17 @@ public struct JSON {
             else if let _ = newValue as? NSNull {
                 _type = .null
             }
-            else if let array = newValue as? [AnyObject] {
+            else if let array = newValue as? [Any] {
                 _type = .array
                 self.rawArray = array
             }
-            else if let dictionary = newValue as? [String : AnyObject] {
+            else if let dictionary = newValue as? [String : Any] {
                 _type = .dictionary
                 self.rawDictionary = dictionary
             }
             else {
                 _type = .unknown
-                _error = NSError(domain: ErrorDomain, code: ErrorUnsupportedType, userInfo: [NSLocalizedDescriptionKey: "It is a unsupported type"])
+                _error = NSError(domain: ErrorDomain, code: ErrorUnsupportedType, userInfo: [AnyHashable(NSLocalizedDescriptionKey): "It is a unsupported type"])
             }
         }
     }
@@ -312,13 +312,13 @@ extension JSON {
         get {
             if self.type != .array {
                 var r = JSON.null
-                r._error = self._error ?? NSError(domain: ErrorDomain, code: ErrorWrongType, userInfo: [NSLocalizedDescriptionKey: "Array[\(index)] failure, It is not an array"])
+                r._error = self._error ?? NSError(domain: ErrorDomain, code: ErrorWrongType, userInfo: [AnyHashable(NSLocalizedDescriptionKey): "Array[\(index)] failure, It is not an array"])
                 return r
             } else if index >= 0 && index < self.rawArray.count {
                 return JSON(self.rawArray[index])
             } else {
                 var r = JSON.null
-                r._error = NSError(domain: ErrorDomain, code:ErrorIndexOutOfBounds , userInfo: [NSLocalizedDescriptionKey: "Array[\(index)] is out of bounds"])
+                r._error = NSError(domain: ErrorDomain, code:ErrorIndexOutOfBounds , userInfo: [AnyHashable(NSLocalizedDescriptionKey): "Array[\(index)] is out of bounds"])
                 return r
             }
         }
@@ -339,10 +339,10 @@ extension JSON {
                 if let o = self.rawDictionary[key] {
                     r = JSON(o)
                 } else {
-                    r._error = NSError(domain: ErrorDomain, code: ErrorNotExist, userInfo: [NSLocalizedDescriptionKey: "Dictionary[\"\(key)\"] does not exist"])
+                    r._error = NSError(domain: ErrorDomain, code: ErrorNotExist, userInfo: [AnyHashable(NSLocalizedDescriptionKey): "Dictionary[\"\(key)\"] does not exist"])
                 }
             } else {
-                r._error = self._error ?? NSError(domain: ErrorDomain, code: ErrorWrongType, userInfo: [NSLocalizedDescriptionKey: "Dictionary[\"\(key)\"] failure, It is not an dictionary"])
+                r._error = self._error ?? NSError(domain: ErrorDomain, code: ErrorWrongType, userInfo: [AnyHashable(NSLocalizedDescriptionKey): "Dictionary[\"\(key)\"] failure, It is not an dictionary"])
             }
             return r
         }
@@ -462,8 +462,8 @@ extension JSON: Swift.FloatLiteralConvertible {
 
 extension JSON: Swift.DictionaryLiteralConvertible {
 
-    public init(dictionaryLiteral elements: (String, AnyObject)...) {
-        self.init(elements.reduce([String : AnyObject](minimumCapacity: elements.count)){(dictionary: [String : AnyObject], element:(String, AnyObject)) -> [String : AnyObject] in
+    public init(dictionaryLiteral elements: (String, Any)...) {
+        self.init(elements.reduce([String : Any](minimumCapacity: elements.count)){(dictionary: [String : Any], element:(String, Any)) -> [String : Any] in
             var d = dictionary
             d[element.0] = element.1
             return d
@@ -473,7 +473,7 @@ extension JSON: Swift.DictionaryLiteralConvertible {
 
 extension JSON: Swift.ArrayLiteralConvertible {
 
-    public init(arrayLiteral elements: AnyObject...) {
+    public init(arrayLiteral elements: Any...) {
         self.init(elements)
     }
 }
@@ -489,7 +489,7 @@ extension JSON: Swift.NilLiteralConvertible {
 
 extension JSON: Swift.RawRepresentable {
 
-    public init?(rawValue: AnyObject) {
+    public init?(rawValue: Any) {
         if JSON(rawValue).type == .unknown {
             return nil
         } else {
@@ -497,13 +497,13 @@ extension JSON: Swift.RawRepresentable {
         }
     }
 
-    public var rawValue: AnyObject {
+    public var rawValue: Any {
         return self.object
     }
 
     public func rawData(options opt: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Data {
         guard JSONSerialization.isValidJSONObject(self.object) else {
-            throw NSError(domain: ErrorDomain, code: ErrorInvalidJSON, userInfo: [NSLocalizedDescriptionKey: "JSON is invalid"])
+            throw NSError(domain: ErrorDomain, code: ErrorInvalidJSON, userInfo: [AnyHashable(NSLocalizedDescriptionKey): "JSON is invalid"])
         }
 
         return try JSONSerialization.data(withJSONObject: self.object, options: opt)
@@ -571,8 +571,8 @@ extension JSON {
         }
     }
 
-    //Optional [AnyObject]
-    public var arrayObject: [AnyObject]? {
+    //Optional [Any]
+    public var arrayObject: [Any]? {
         get {
             switch self.type {
             case .array:
@@ -599,7 +599,7 @@ extension JSON {
     public var dictionary: [String : JSON]? {
         if self.type == .dictionary {
 
-            return self.rawDictionary.reduce([String : JSON]()) { (dictionary: [String : JSON], element: (String, AnyObject)) -> [String : JSON] in
+            return self.rawDictionary.reduce([String : JSON]()) { (dictionary: [String : JSON], element: (String, Any)) -> [String : JSON] in
                 var d = dictionary
                 d[element.0] = JSON(element.1)
                 return d
@@ -614,8 +614,8 @@ extension JSON {
         return self.dictionary ?? [:]
     }
 
-    //Optional [String : AnyObject]
-    public var dictionaryObject: [String : AnyObject]? {
+    //Optional [String : Any]
+    public var dictionaryObject: [String : Any]? {
         get {
             switch self.type {
             case .dictionary:
@@ -661,8 +661,10 @@ extension JSON {
     public var boolValue: Bool {
         get {
             switch self.type {
-            case .bool, .number, .string:
-                return self.object.boolValue
+            case .bool, .number:
+                return self.rawNumber.boolValue
+            case .string:
+                return self.rawString == "true"
             default:
                 return false
             }
@@ -703,7 +705,7 @@ extension JSON {
             case .string:
                 return self.object as? String ?? ""
             case .number:
-                return self.object.stringValue
+                return self.rawNumber.stringValue
             case .bool:
                 return (self.object as? Bool).map { String($0) } ?? ""
             default:
