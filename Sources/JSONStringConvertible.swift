@@ -30,7 +30,7 @@ extension Array: JSONStringConvertible {
             if $0 is JSONStringConvertible {
                 return ($0 as! JSONStringConvertible).jsonString
             }else {
-                return String($0)
+                return String(describing: $0)
             }}.joined(separator: ",") + "]"
     }
 }

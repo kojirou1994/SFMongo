@@ -41,7 +41,7 @@ extension Array: BSONStringConvertible {
             if $0 is BSONStringConvertible {
                 return ($0 as! BSONStringConvertible).bsonString
             }else {
-                return String($0)
+                return String(describing: $0)
             }}.joined(separator: ",") + "]"
     }
 }
